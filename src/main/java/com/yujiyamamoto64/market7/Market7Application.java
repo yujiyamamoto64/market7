@@ -15,6 +15,7 @@ import com.yujiyamamoto64.market7.domain.Category;
 import com.yujiyamamoto64.market7.domain.City;
 import com.yujiyamamoto64.market7.domain.Client;
 import com.yujiyamamoto64.market7.domain.Order;
+import com.yujiyamamoto64.market7.domain.OrderItem;
 import com.yujiyamamoto64.market7.domain.Payment;
 import com.yujiyamamoto64.market7.domain.Product;
 import com.yujiyamamoto64.market7.domain.State;
@@ -24,6 +25,7 @@ import com.yujiyamamoto64.market7.repositories.AddressRepository;
 import com.yujiyamamoto64.market7.repositories.CategoryRepository;
 import com.yujiyamamoto64.market7.repositories.CityRepository;
 import com.yujiyamamoto64.market7.repositories.ClientRepository;
+import com.yujiyamamoto64.market7.repositories.OrderItemRepository;
 import com.yujiyamamoto64.market7.repositories.OrderRepository;
 import com.yujiyamamoto64.market7.repositories.PaymentRepository;
 import com.yujiyamamoto64.market7.repositories.ProductRepository;
@@ -55,6 +57,9 @@ public class Market7Application implements CommandLineRunner{
 	
 	@Autowired
 	private PaymentRepository paymentRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Market7Application.class, args);
@@ -119,6 +124,20 @@ public class Market7Application implements CommandLineRunner{
 		
 		orderRepository.saveAll(Arrays.asList(ped1, ped2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
+		
+		OrderItem ip1 = new OrderItem(ped1, p1, 0.00, 1, 2000.00);
+		OrderItem ip2 = new OrderItem(ped1, p3, 0.00, 1, 80.00);
+		OrderItem ip3 = new OrderItem(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItems().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItems().add(ip3);
+		
+		p1.getItems().add(ip1);
+		p2.getItems().add(ip3);
+		p3.getItems().add(ip2);
+		
+		orderItemRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
+
 	}
 
 }
