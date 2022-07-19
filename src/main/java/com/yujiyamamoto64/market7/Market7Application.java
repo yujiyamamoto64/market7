@@ -1,5 +1,6 @@
 package com.yujiyamamoto64.market7;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +9,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.yujiyamamoto64.market7.domain.Address;
+import com.yujiyamamoto64.market7.domain.BoletoPayment;
+import com.yujiyamamoto64.market7.domain.CardPayment;
 import com.yujiyamamoto64.market7.domain.Category;
 import com.yujiyamamoto64.market7.domain.City;
 import com.yujiyamamoto64.market7.domain.Client;
+import com.yujiyamamoto64.market7.domain.Order;
+import com.yujiyamamoto64.market7.domain.Payment;
 import com.yujiyamamoto64.market7.domain.Product;
 import com.yujiyamamoto64.market7.domain.State;
 import com.yujiyamamoto64.market7.domain.enums.ClientType;
+import com.yujiyamamoto64.market7.domain.enums.PaymentStatus;
 import com.yujiyamamoto64.market7.repositories.AddressRepository;
 import com.yujiyamamoto64.market7.repositories.CategoryRepository;
 import com.yujiyamamoto64.market7.repositories.CityRepository;
 import com.yujiyamamoto64.market7.repositories.ClientRepository;
+import com.yujiyamamoto64.market7.repositories.OrderRepository;
+import com.yujiyamamoto64.market7.repositories.PaymentRepository;
 import com.yujiyamamoto64.market7.repositories.ProductRepository;
 import com.yujiyamamoto64.market7.repositories.StateRepository;
 
@@ -41,6 +49,12 @@ public class Market7Application implements CommandLineRunner{
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
+	
+	@Autowired
+	private PaymentRepository paymentRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Market7Application.class, args);
@@ -88,6 +102,23 @@ public class Market7Application implements CommandLineRunner{
 		
 		clientRepository.save(cli1);
 		addressRepository.saveAll(Arrays.asList(e1, e2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Order ped1 = new Order(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Order ped2 = new Order(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+		
+		Payment pay1 = new CardPayment(null, PaymentStatus.PAID, ped1, 6);
+		ped1.setPayment(pay1);
+		
+		Payment pay2 = new BoletoPayment(null, PaymentStatus.WAITING, 
+				ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPayment(pay2);
+		
+		cli1.getOrders().addAll(Arrays.asList(ped1, ped2));
+		
+		orderRepository.saveAll(Arrays.asList(ped1, ped2));
+		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
 	}
 
 }
