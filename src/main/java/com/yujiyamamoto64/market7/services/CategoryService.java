@@ -1,5 +1,6 @@
 package com.yujiyamamoto64.market7.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,9 @@ public class CategoryService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Cant exclude category with products associated.");
 		}
+	}
+
+	public List<Category> findAll() {
+		return repo.findAll();
 	}
 }
