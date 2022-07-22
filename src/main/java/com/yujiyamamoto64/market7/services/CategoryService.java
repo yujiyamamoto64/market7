@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.yujiyamamoto64.market7.domain.Category;
+import com.yujiyamamoto64.market7.dto.CategoryDTO;
 import com.yujiyamamoto64.market7.repositories.CategoryRepository;
 import com.yujiyamamoto64.market7.services.exceptions.DataIntegrityException;
 import com.yujiyamamoto64.market7.services.exceptions.ObjectNotFoundException;
@@ -55,5 +56,9 @@ public class CategoryService {
 		PageRequest pageRequest = PageRequest.of(page, 
 				linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
+	}
+	
+	public Category fromDTO(CategoryDTO objDto) {
+		return new Category(objDto.getId(), objDto.getName());
 	}
 }
