@@ -2,20 +2,41 @@ package com.yujiyamamoto64.market7.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.yujiyamamoto64.market7.services.validations.ClientInsert;
+
+@ClientInsert
 public class ClientNewDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@NotEmpty(message = "must contain")
+	@Length(min=5, max=120, message="Must be withing 5 and 120 characters")
 	private String name;
+	
+	@NotEmpty(message="must contain")
+	@Email(message = "Invalid email")
 	private String email;
+	
+	@NotEmpty(message="must contain")
 	private String cpfOrCnpj;
 	private Integer type;
 	
+	@NotEmpty(message="must contain")
 	private String publicPlace;
+	
+	@NotEmpty(message="must contain")
 	private String number;
 	private String complement;
 	private String district;
+	
+	@NotEmpty(message="must contain")
 	private String cep;
 	
+	@NotEmpty(message="must contain")
 	private String phone1;
 	private String phone2;
 	private String phone3;
