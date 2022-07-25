@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.yujiyamamoto64.market7.domain.Client;
 import com.yujiyamamoto64.market7.dto.ClientDTO;
+import com.yujiyamamoto64.market7.dto.ClientNewDTO;
 import com.yujiyamamoto64.market7.services.ClientService;
 
 @RestController
@@ -38,8 +39,9 @@ public class ClientResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClientDTO objDto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClientNewDTO objDto) {
 		Client obj = service.fromDTO(objDto);
+		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")

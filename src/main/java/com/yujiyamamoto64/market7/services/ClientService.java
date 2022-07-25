@@ -10,8 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.yujiyamamoto64.market7.domain.Address;
+import com.yujiyamamoto64.market7.domain.City;
 import com.yujiyamamoto64.market7.domain.Client;
+import com.yujiyamamoto64.market7.domain.enums.ClientType;
 import com.yujiyamamoto64.market7.dto.ClientDTO;
+import com.yujiyamamoto64.market7.dto.ClientNewDTO;
+import com.yujiyamamoto64.market7.repositories.AddressRepository;
+import com.yujiyamamoto64.market7.repositories.CityRepository;
 import com.yujiyamamoto64.market7.repositories.ClientRepository;
 import com.yujiyamamoto64.market7.services.exceptions.DataIntegrityException;
 import com.yujiyamamoto64.market7.services.exceptions.ObjectNotFoundException;
@@ -21,6 +27,12 @@ public class ClientService {
 	
 	@Autowired
 	private ClientRepository repo;
+	
+	@Autowired
+	private CityRepository cityRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
 
 	public Client findById(Integer id) {
 		Optional<Client> obj = repo.findById(id);
@@ -30,7 +42,9 @@ public class ClientService {
 	
 	public Client insert(Client obj) {
 		obj.setId(null);
-		return repo.save(obj);
+		obj = repo.save(obj);
+		addressRepository.saveAll(obj.getAddresses());
+		return obj;
 	}
 	
 	public Client update(Client obj) {
@@ -66,5 +80,20 @@ public class ClientService {
 	
 	public Client fromDTO(ClientDTO objDto) {
 		return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+	}
+	
+	public Client fromDTO(ClientNewDTO objDto) {
+		Client cli = new Client(null, objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(), ClientType.toEnum(objDto.getType()));
+		City cid = cityRepository.findById(objDto.getCityId()).get();
+		Address end = new Address(null, objDto.getPublicPlace(), objDto.getNumber(), objDto.getComplement(), objDto.getDistrict(), objDto.getCep(), cli, cid);
+		cli.getAddresses().add(end);
+		cli.getPhones().add(objDto.getPhone1());
+		if (objDto.getPhone2() != null) {
+			cli.getPhones().add(objDto.getPhone2());
+		}
+		if (objDto.getPhone3() != null) {
+			cli.getPhones().add(objDto.getPhone3());
+		}
+		return cli;
 	}
 }
