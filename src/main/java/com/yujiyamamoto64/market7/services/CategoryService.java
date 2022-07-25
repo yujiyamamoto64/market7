@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.yujiyamamoto64.market7.domain.Category;
+import com.yujiyamamoto64.market7.domain.Client;
 import com.yujiyamamoto64.market7.dto.CategoryDTO;
 import com.yujiyamamoto64.market7.repositories.CategoryRepository;
 import com.yujiyamamoto64.market7.services.exceptions.DataIntegrityException;
@@ -34,8 +35,13 @@ public class CategoryService {
 	}
 	
 	public Category update(Category obj) {
-		findById(obj.getId());
-		return repo.save(obj);
+		Category newObj = findById(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
+	}
+	
+	private void updateData(Category newObj, Category obj) {
+		newObj.setName(obj.getName());
 	}
 
 	public void delete(Integer id) {
