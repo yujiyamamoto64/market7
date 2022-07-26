@@ -7,7 +7,9 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.yujiyamamoto64.market7.domain.Client;
+import com.yujiyamamoto64.market7.services.validations.ClientUpdate;
 
+@ClientUpdate
 public class ClientDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
