@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.yujiyamamoto64.market7.domain.Category;
 import com.yujiyamamoto64.market7.domain.Order;
-import com.yujiyamamoto64.market7.dto.CategoryDTO;
 import com.yujiyamamoto64.market7.services.OrderService;
 
 @RestController
