@@ -1,6 +1,7 @@
 package com.yujiyamamoto64.market7.domain;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -124,4 +125,27 @@ public class Order implements Serializable{
 		Order other = (Order) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Order number: ");
+		builder.append(getId());
+		builder.append(", moment: ");
+		builder.append(sdf.format(getDate()));
+		builder.append(", Client: ");
+		builder.append(getClient().getName());
+		builder.append(", payment status: ");
+		builder.append(getPayment().getStatus().getDescription());
+		builder.append("\nDetails:\n");
+		for (OrderItem ip : getItems()) {
+			builder.append(ip.toString());
+		}
+		builder.append("Total value: ");
+		builder.append(getTotalValue());
+		return builder.toString();
+	}
+	
+	
 }

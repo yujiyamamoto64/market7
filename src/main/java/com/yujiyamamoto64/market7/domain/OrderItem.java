@@ -101,4 +101,18 @@ public class OrderItem implements Serializable {
 		OrderItem other = (OrderItem) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getProduct().getName());
+		builder.append(", quantity: ");
+		builder.append(getQuantity());
+		builder.append(", unit price: ");
+		builder.append(getPrice());
+		builder.append(", subTotal: ");
+		builder.append(getSubTotal());
+		builder.append("\n");
+		return builder.toString();
+	}
 }
