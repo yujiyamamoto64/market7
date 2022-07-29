@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.yujiyamamoto64.market7.services.DBService;
 import com.yujiyamamoto64.market7.services.EmailService;
-import com.yujiyamamoto64.market7.services.MockEmailService;
+import com.yujiyamamoto64.market7.services.SmtpEmailService;
 
 @Configuration
 @Profile("test")
@@ -24,8 +24,15 @@ public class TestConfig {
 		return true;
 	}
 	
+	/*
 	@Bean
 	public EmailService emailService() {
 		return new MockEmailService();
+	} 
+	*/
+	
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 }

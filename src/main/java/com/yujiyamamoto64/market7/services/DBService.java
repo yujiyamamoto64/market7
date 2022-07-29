@@ -118,7 +118,8 @@ public class DBService {
 		stateRepository.saveAll(Arrays.asList(st1, st2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 		
-		Client cli1 = new Client(null, "Maria Silva", "maria@gmail.com", "36378912377", ClientType.PESSOAFISICA);
+		// just changing maria email to myself email to test email send method
+		Client cli1 = new Client(null, "Maria Silva", "yujiyamamoto64@gmail.com", "36378912377", ClientType.PESSOAFISICA);
 		cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 		
 		Address e1 = new Address(null, "Rua Flores", "300", "Apto 300", "Jardim", "38220834", cli1, c1);
