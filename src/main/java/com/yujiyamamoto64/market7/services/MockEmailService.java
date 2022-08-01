@@ -1,5 +1,7 @@
 package com.yujiyamamoto64.market7.services;
 
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,6 +15,14 @@ public class MockEmailService extends AbstractEmailService {
 		LOG.info("Email send simulation...");
 		LOG.info(msg.toString());
 		LOG.info("Email sended");
+	}
+
+	@Override
+	public void sendHtmlEmail(MimeMessage msg) {
+		LOG.info("Email send simulation...");
+		LOG.info(msg.toString());
+		LOG.info("Email sended");
+		
 	}
 
 }
