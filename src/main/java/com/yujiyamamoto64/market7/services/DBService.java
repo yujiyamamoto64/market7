@@ -21,6 +21,7 @@ import com.yujiyamamoto64.market7.domain.Product;
 import com.yujiyamamoto64.market7.domain.State;
 import com.yujiyamamoto64.market7.domain.enums.ClientType;
 import com.yujiyamamoto64.market7.domain.enums.PaymentStatus;
+import com.yujiyamamoto64.market7.domain.enums.Role;
 import com.yujiyamamoto64.market7.repositories.AddressRepository;
 import com.yujiyamamoto64.market7.repositories.CategoryRepository;
 import com.yujiyamamoto64.market7.repositories.CityRepository;
@@ -125,14 +126,19 @@ public class DBService {
 		// just changing maria email to myself email to test email send method
 		Client cli1 = new Client(null, "Maria Silva", "yujiyamamoto64@gmail.com", "36378912377", ClientType.PESSOAFISICA, pe.encode("123"));
 		cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
+		Client cli2 = new Client(null, "Ana Costa", "anac@gmail.com", "86774274064", ClientType.PESSOAFISICA, pe.encode("3453"));
+		cli2.addRole(Role.ADMIN);
+		cli2.getPhones().addAll(Arrays.asList("4879875", "4897589347"));
 		
 		Address e1 = new Address(null, "Rua Flores", "300", "Apto 300", "Jardim", "38220834", cli1, c1);
 		Address e2 = new Address(null, "Avenida matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+		Address e3 = new Address(null, "Avenida floriano", "2106", null, "Centro", "281777012", cli2, c2);
 		
 		cli1.getAddresses().addAll(Arrays.asList(e1, e2));
+		cli2.getAddresses().addAll(Arrays.asList(e3));
 		
-		clientRepository.save(cli1);
-		addressRepository.saveAll(Arrays.asList(e1, e2));
+		clientRepository.saveAll(Arrays.asList(cli1, cli2));
+		addressRepository.saveAll(Arrays.asList(e1, e2, e3));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
