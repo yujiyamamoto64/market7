@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.yujiyamamoto64.market7.domain.Address;
@@ -32,6 +33,9 @@ import com.yujiyamamoto64.market7.repositories.StateRepository;
 
 @Service
 public class DBService {
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -119,7 +123,7 @@ public class DBService {
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 		
 		// just changing maria email to myself email to test email send method
-		Client cli1 = new Client(null, "Maria Silva", "yujiyamamoto64@gmail.com", "36378912377", ClientType.PESSOAFISICA);
+		Client cli1 = new Client(null, "Maria Silva", "yujiyamamoto64@gmail.com", "36378912377", ClientType.PESSOAFISICA, pe.encode("123"));
 		cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 		
 		Address e1 = new Address(null, "Rua Flores", "300", "Apto 300", "Jardim", "38220834", cli1, c1);

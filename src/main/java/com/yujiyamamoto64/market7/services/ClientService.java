@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.yujiyamamoto64.market7.domain.Address;
@@ -24,29 +25,32 @@ import com.yujiyamamoto64.market7.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClientService {
-	
+
+	@Autowired
+	private BCryptPasswordEncoder pe;
+
 	@Autowired
 	private ClientRepository repo;
-	
+
 	@Autowired
 	private CityRepository cityRepository;
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
 
 	public Client findById(Integer id) {
 		Optional<Client> obj = repo.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found! Id: " + id
-				+ ", Type: " + Client.class.getName()));
+		return obj.orElseThrow(
+				() -> new ObjectNotFoundException("Object not found! Id: " + id + ", Type: " + Client.class.getName()));
 	}
-	
+
 	public Client insert(Client obj) {
 		obj.setId(null);
 		obj = repo.save(obj);
 		addressRepository.saveAll(obj.getAddresses());
 		return obj;
 	}
-	
+
 	public Client update(Client obj) {
 		Client newObj = findById(obj.getId());
 		updateData(newObj, obj);
@@ -70,22 +74,22 @@ public class ClientService {
 	public List<Client> findAll() {
 		return repo.findAll();
 	}
-	
-	public Page<Client> findPage(Integer page, 
-			Integer linesPerPage, String orderBy, String direction) {
-		PageRequest pageRequest = PageRequest.of(page, 
-				linesPerPage, Direction.valueOf(direction), orderBy);
+
+	public Page<Client> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
-	
+
 	public Client fromDTO(ClientDTO objDto) {
-		return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+		return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null, null);
 	}
-	
+
 	public Client fromDTO(ClientNewDTO objDto) {
-		Client cli = new Client(null, objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(), ClientType.toEnum(objDto.getType()));
+		Client cli = new Client(null, objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(),
+				ClientType.toEnum(objDto.getType()), pe.encode(objDto.getPassword()));
 		City cid = cityRepository.findById(objDto.getCityId()).get();
-		Address end = new Address(null, objDto.getPublicPlace(), objDto.getNumber(), objDto.getComplement(), objDto.getDistrict(), objDto.getCep(), cli, cid);
+		Address end = new Address(null, objDto.getPublicPlace(), objDto.getNumber(), objDto.getComplement(),
+				objDto.getDistrict(), objDto.getCep(), cli, cid);
 		cli.getAddresses().add(end);
 		cli.getPhones().add(objDto.getPhone1());
 		if (objDto.getPhone2() != null) {
