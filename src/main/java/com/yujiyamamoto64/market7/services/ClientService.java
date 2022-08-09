@@ -15,11 +15,14 @@ import com.yujiyamamoto64.market7.domain.Address;
 import com.yujiyamamoto64.market7.domain.City;
 import com.yujiyamamoto64.market7.domain.Client;
 import com.yujiyamamoto64.market7.domain.enums.ClientType;
+import com.yujiyamamoto64.market7.domain.enums.Role;
 import com.yujiyamamoto64.market7.dto.ClientDTO;
 import com.yujiyamamoto64.market7.dto.ClientNewDTO;
 import com.yujiyamamoto64.market7.repositories.AddressRepository;
 import com.yujiyamamoto64.market7.repositories.CityRepository;
 import com.yujiyamamoto64.market7.repositories.ClientRepository;
+import com.yujiyamamoto64.market7.security.UserSS;
+import com.yujiyamamoto64.market7.services.exceptions.AuthorizationException;
 import com.yujiyamamoto64.market7.services.exceptions.DataIntegrityException;
 import com.yujiyamamoto64.market7.services.exceptions.ObjectNotFoundException;
 
@@ -39,6 +42,12 @@ public class ClientService {
 	private AddressRepository addressRepository;
 
 	public Client findById(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+		if(user == null || !user.hasRole(Role.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Access denied");
+		}
+		
 		Optional<Client> obj = repo.findById(id);
 		return obj.orElseThrow(
 				() -> new ObjectNotFoundException("Object not found! Id: " + id + ", Type: " + Client.class.getName()));
