@@ -4,16 +4,22 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yujiyamamoto64.market7.domain.BoletoPayment;
+import com.yujiyamamoto64.market7.domain.Client;
 import com.yujiyamamoto64.market7.domain.Order;
 import com.yujiyamamoto64.market7.domain.OrderItem;
 import com.yujiyamamoto64.market7.domain.enums.PaymentStatus;
 import com.yujiyamamoto64.market7.repositories.OrderItemRepository;
 import com.yujiyamamoto64.market7.repositories.OrderRepository;
 import com.yujiyamamoto64.market7.repositories.PaymentRepository;
+import com.yujiyamamoto64.market7.security.UserSS;
+import com.yujiyamamoto64.market7.services.exceptions.AuthorizationException;
 import com.yujiyamamoto64.market7.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -70,4 +76,15 @@ public class OrderService {
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 	}
+	
+	public Page<Order> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if(user == null) {
+			throw new AuthorizationException("Access denied");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Client client = clientService.findById(user.getId());
+		return repo.findByClient(client, pageRequest);
+	}
+	
 }
