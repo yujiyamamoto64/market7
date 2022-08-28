@@ -195,12 +195,12 @@ public class DBService {
 		State st1 = new State(null, "Sao Paulo");
 		State st2 = new State(null, "Minas Gerais");
 		
-		City c1 = new City(null, "Uberlandia", st1);
-		City c2 = new City(null, "Sao Paulo", st2);
-		City c3 = new City(null, "Campinas", st2);
+		City c1 = new City(null, "Uberlandia", st2);
+		City c2 = new City(null, "Sao Paulo", st1);
+		City c3 = new City(null, "Campinas", st1);
 		
-		st1.getCities().add(c1);
-		st2.getCities().addAll(Arrays.asList(c2, c3));
+		st2.getCities().add(c1);
+		st1.getCities().addAll(Arrays.asList(c2, c3));
 		
 		stateRepository.saveAll(Arrays.asList(st1, st2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
@@ -208,7 +208,7 @@ public class DBService {
 		// just changing maria email to myself email to test email send method
 		Client cli1 = new Client(null, "Maria Silva", "yujiyamamoto64@gmail.com", "36378912377", ClientType.PESSOAFISICA, pe.encode("123"));
 		cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
-		Client cli2 = new Client(null, "Ana Costa", "anac@gmail.com", "86774274064", ClientType.PESSOAFISICA, pe.encode("3453"));
+		Client cli2 = new Client(null, "Ana Costa", "anac@gmail.com", "86774274064", ClientType.PESSOAFISICA, pe.encode("123"));
 		cli2.addRole(Role.ADMIN);
 		cli2.getPhones().addAll(Arrays.asList("4879875", "4897589347"));
 		
